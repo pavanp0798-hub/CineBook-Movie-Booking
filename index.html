@@ -2,352 +2,659 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CineBook Movie Booking</title>
-<style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #0b0b10;
-  color: white;
-}
-header {
-  background: #15151e;
-  padding: 20px 7%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.logo { font-size: 26px; font-weight: bold; }
-.logo span { color: #ef3340; }
-nav a {
-  color: white;
-  text-decoration: none;
-  margin-left: 15px;
-}
-.hero {
-  padding: 60px 7%;
-  background: linear-gradient(120deg, #17101b, #54202c);
-}
-.hero h1 { font-size: 45px; }
-section { padding: 30px 7%; }
-.movies {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 15px;
-}
-.card, .panel {
-  background: #15151e;
-  border: 1px solid #30303d;
-  border-radius: 12px;
-  padding: 16px;
-}
-.poster {
-  height: 140px;
-  border-radius: 8px;
-  background: linear-gradient(140deg, #202f65, #b13b4a);
-  display: flex;
-  align-items: end;
-  padding: 12px;
-  font-weight: bold;
-}
-button {
-  border: 0;
-  border-radius: 6px;
-  padding: 10px 13px;
-  background: #ef3340;
-  color: white;
-  cursor: pointer;
-}
-select, input {
-  display: block;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 10px;
-  margin: 8px 0 15px;
-  background: #0b0b10;
-  color: white;
-  border: 1px solid #444;
-  border-radius: 6px;
-}
-.layout {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-.seats {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 8px;
-}
-.seat { background: #444455; padding: 9px 2px; }
-.seat.selected { background: #ef3340; }
-.seat:disabled { background: #777; cursor: not-allowed; }
-.summary p {
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid #333;
-  padding-bottom: 8px;
-}
-.booking {
-  background: #15151e;
-  margin: 10px 0;
-  padding: 14px;
-  border-radius: 8px;
-}
-footer { padding: 25px 7%; color: #aaa; }
-@media(max-width:750px) {
-  .movies { grid-template-columns: repeat(2, 1fr); }
-  .layout { grid-template-columns: 1fr; }
-  .hero h1 { font-size: 34px; }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineBook | Movie Ticket Booking</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #101014;
+            color: white;
+        }
+
+        header {
+            background: #1b1b23;
+            padding: 20px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo {
+            color: #ff3855;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+
+        nav a:hover {
+            color: #ff3855;
+        }
+
+        .hero {
+            padding: 50px 6%;
+            background: linear-gradient(120deg, #45152b, #15151c);
+        }
+
+        .hero h1 {
+            font-size: clamp(28px, 4vw, 42px);
+            margin-bottom: 12px;
+        }
+
+        .hero p {
+            color: #dddddf;
+            line-height: 1.7;
+        }
+
+        .section-title {
+            padding: 30px 6% 15px;
+        }
+
+        .movies {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 20px;
+            padding: 15px 6% 40px;
+        }
+
+        .movie-card {
+            background: #202027;
+            border: 2px solid #303039;
+            border-radius: 12px;
+            padding: 12px;
+            min-width: 0;
+            transition: 0.2s;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-4px);
+            border-color: #ff3855;
+        }
+
+        .movie-card.selected {
+            border-color: #ff3855;
+        }
+
+        .poster {
+            display: block;
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+            object-position: center;
+            background: #292933;
+            border-radius: 8px;
+        }
+
+        .movie-card h3 {
+            margin: 14px 0 8px;
+            font-size: 19px;
+        }
+
+        .genre {
+            color: #bbbbc5;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .price {
+            color: #ff788c;
+            font-weight: bold;
+            margin-bottom: 14px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 7px;
+            background: #ff3855;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #df2440;
+        }
+
+        .booking-section {
+            padding: 30px 6% 50px;
+            background: #19191f;
+        }
+
+        .booking-section h2 {
+            margin-bottom: 10px;
+        }
+
+        .intro {
+            color: #bbbbc5;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .booking-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .booking-form,
+        .summary {
+            background: #24242c;
+            border-radius: 12px;
+            padding: 24px;
+            min-width: 0;
+        }
+
+        .field {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #454550;
+            border-radius: 7px;
+            background: #15151b;
+            color: white;
+            font-size: 15px;
+        }
+
+        input:focus,
+        select:focus {
+            outline: 1px solid #ff3855;
+            border-color: #ff3855;
+        }
+
+        .summary h3 {
+            margin-bottom: 20px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin: 18px 0;
+            color: #ccccd4;
+        }
+
+        .summary-row strong {
+            color: white;
+            text-align: right;
+            overflow-wrap: anywhere;
+        }
+
+        .total {
+            border-top: 1px solid #454550;
+            padding-top: 18px;
+            font-size: 20px;
+        }
+
+        .confirmation {
+            display: none;
+            margin-top: 20px;
+            padding: 18px;
+            background: #183a2b;
+            border: 1px solid #35885a;
+            border-radius: 8px;
+            line-height: 1.8;
+            overflow-wrap: anywhere;
+        }
+
+        .confirmation h3 {
+            color: #7ff0b0;
+            margin-bottom: 10px;
+        }
+
+        footer {
+            padding: 22px;
+            text-align: center;
+            background: #101014;
+            color: #9999a4;
+        }
+
+        @media (max-width: 850px) {
+            .movies {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .booking-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .poster {
+                height: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 18px 4%;
+            }
+
+            .logo {
+                font-size: 24px;
+            }
+
+            nav a {
+                margin-left: 8px;
+                font-size: 13px;
+            }
+
+            .movies {
+                padding-left: 4%;
+                padding-right: 4%;
+                gap: 10px;
+            }
+
+            .movie-card {
+                padding: 8px;
+            }
+
+            .poster {
+                height: 220px;
+            }
+
+            .movie-card h3 {
+                font-size: 16px;
+            }
+
+            .booking-section {
+                padding-left: 4%;
+                padding-right: 4%;
+            }
+
+            .booking-form,
+            .summary {
+                padding: 17px;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
 <header>
-  <div class="logo">Cine<span>Book</span></div>
-  <nav>
-    <a href="#movies">Movies</a>
-    <a href="#booking">Book Tickets</a>
-    <a href="#history">My Bookings</a>
-  </nav>
+    <div class="logo">CineBook 🎬</div>
+
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#movies">Movies</a>
+        <a href="#booking">Book Tickets</a>
+    </nav>
 </header>
 
-<div class="hero">
-  <h1>Big Stories. Bigger Screen.</h1>
-  <p>Choose your movie, select your seats and book your show.</p>
-  <a href="#movies"><button>Explore Movies</button></a>
-</div>
-
-<section id="movies">
-  <h2>Now Showing</h2>
-  <div class="movies" id="movieList"></div>
+<section class="hero" id="home">
+    <h1>Your Movie. Your Seat. Your Experience.</h1>
+    <p>Discover your favourite movies and book your tickets in a few clicks.</p>
 </section>
 
-<section id="booking">
-  <h2>Book Your Tickets</h2>
-  <div class="layout">
-    <div class="panel">
-      <label>Choose Movie</label>
-      <select id="movie"></select>
+<h2 class="section-title" id="movies">Now Showing</h2>
 
-      <label>Choose Date</label>
-      <input type="date" id="date">
+<section class="movies" id="movieList"></section>
 
-      <label>Choose Showtime</label>
-      <select id="time">
-        <option>10:30 AM</option>
-        <option>1:45 PM</option>
-        <option>4:30 PM</option>
-        <option>7:45 PM</option>
-      </select>
+<section class="booking-section" id="booking">
+    <h2>Book Your Tickets</h2>
+    <p class="intro">
+        Choose your favourite movie, select a showtime, and confirm your booking.
+    </p>
 
-      <h3 style="text-align:center">SCREEN</h3>
-      <hr style="margin-bottom:25px">
+    <div class="booking-layout">
 
-      <div class="seats" id="seats"></div>
-      <p>Grey seats are unavailable.</p>
+        <form class="booking-form" id="bookingForm">
+
+            <div class="field">
+                <label for="customerName">Your Name</label>
+                <input
+                    type="text"
+                    id="customerName"
+                    placeholder="Enter your name"
+                    required
+                >
+            </div>
+
+            <div class="field">
+                <label for="bookingMovie">Select Movie</label>
+                <select id="bookingMovie" required></select>
+            </div>
+
+            <div class="field">
+                <label for="bookingDate">Booking Date</label>
+                <input type="date" id="bookingDate" required>
+            </div>
+
+            <div class="field">
+                <label for="showtime">Show Time</label>
+                <select id="showtime">
+                    <option value="10:00 AM">10:00 AM</option>
+                    <option value="1:30 PM">1:30 PM</option>
+                    <option value="5:00 PM">5:00 PM</option>
+                    <option value="8:30 PM">8:30 PM</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="ticketCount">Number of Tickets</label>
+                <select id="ticketCount">
+                    <option value="1">1 Ticket</option>
+                    <option value="2">2 Tickets</option>
+                    <option value="3">3 Tickets</option>
+                    <option value="4">4 Tickets</option>
+                    <option value="5">5 Tickets</option>
+                    <option value="6">6 Tickets</option>
+                </select>
+            </div>
+
+            <button type="submit">Confirm Booking</button>
+        </form>
+
+        <div class="summary">
+            <h3>Booking Summary</h3>
+
+            <div class="summary-row">
+                <span>Movie</span>
+                <strong id="summaryMovie"></strong>
+            </div>
+
+            <div class="summary-row">
+                <span>Price per ticket</span>
+                <strong id="summaryPrice"></strong>
+            </div>
+
+            <div class="summary-row">
+                <span>Number of tickets</span>
+                <strong id="summaryCount"></strong>
+            </div>
+
+            <div class="summary-row">
+                <span>Date</span>
+                <strong id="summaryDate"></strong>
+            </div>
+
+            <div class="summary-row">
+                <span>Show Time</span>
+                <strong id="summaryTime"></strong>
+            </div>
+
+            <div class="summary-row total">
+                <span>Total Amount</span>
+                <strong id="summaryTotal"></strong>
+            </div>
+
+            <div class="confirmation" id="confirmation">
+                <h3>Booking Confirmed!</h3>
+                <div id="confirmationDetails"></div>
+            </div>
+        </div>
+
     </div>
-
-    <div class="panel summary">
-      <h3>Booking Summary</h3>
-      <p><span>Movie</span><strong id="sMovie">—</strong></p>
-      <p><span>Date</span><strong id="sDate">—</strong></p>
-      <p><span>Time</span><strong id="sTime">—</strong></p>
-      <p><span>Seats</span><strong id="sSeats">None</strong></p>
-      <p><span>Tickets</span><strong id="sPrice">₹0</strong></p>
-      <p><span>Fee</span><strong id="sFee">₹0</strong></p>
-      <p><span>Total</span><strong id="sTotal">₹0</strong></p>
-
-      <label>Your Name</label>
-      <input id="name" placeholder="Enter your name">
-
-      <button id="confirm" style="width:100%">
-        Confirm Demo Booking
-      </button>
-      <p id="message"></p>
-      <p style="color:#aaa;font-size:12px">
-        Demo only. No real payment is taken.
-      </p>
-    </div>
-  </div>
 </section>
 
-<section id="history">
-  <h2>My Bookings</h2>
-  <button id="clear">Clear History</button>
-  <div id="bookingList"></div>
-</section>
-
-<footer>CineBook © 2026 | Student Project Demo</footer>
+<footer>
+    <p>© 2026 CineBook | Movie Ticket Booking Website</p>
+</footer>
 
 <script>
-const movies = [
-  {name:"Galaxy Warriors", genre:"Sci-Fi / Action", price:220},
-  {name:"The Last Kingdom", genre:"Adventure / Drama", price:180},
-  {name:"Midnight Mystery", genre:"Thriller", price:200},
-  {name:"Laugh Out Loud", genre:"Comedy", price:160}
-];
+    // YOUR FOUR MOVIES
+    const movies = [
+        {
+            id: 1,
+            title: "Premada Oorali",
+            genre: "Kannada Movie",
+            price: 180,
+            poster: "./posters/premada-oorali.jpg"
+        },
+        {
+            id: 2,
+            title: "Ramayana",
+            genre: "Epic / Mythology",
+            price: 200,
+            poster: "./posters/ramayana.jpg"
+        },
+        {
+            id: 3,
+            title: "Musafir Cafe",
+            genre: "Drama",
+            price: 180,
+            poster: "./posters/musafir-cafe.jpg"
+        },
+        {
+            id: 4,
+            title: "Odyssey",
+            genre: "Adventure",
+            price: 160,
+            poster: "./posters/odyssey.jpg"
+        }
+    ];
 
-const $ = id => document.getElementById(id);
-let selectedSeats = [];
-const fee = 20;
+    const movieList = document.getElementById("movieList");
+    const bookingMovie = document.getElementById("bookingMovie");
+    const bookingDate = document.getElementById("bookingDate");
+    const ticketCount = document.getElementById("ticketCount");
+    const showtime = document.getElementById("showtime");
+    const confirmation = document.getElementById("confirmation");
 
-function money(amount) {
-  return "₹" + amount;
-}
+    // Use local date to avoid timezone validation errors.
+    function getToday() {
+        const date = new Date();
 
-function setup() {
-  $("movieList").innerHTML = movies.map((m, i) => `
-    <div class="card">
-      <div class="poster">${m.name}</div>
-      <h3>${m.name}</h3>
-      <p>${m.genre}</p>
-      <p>From ${money(m.price)}</p>
-      <button onclick="chooseMovie(${i})">Book Now</button>
-    </div>
-  `).join("");
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
 
-  $("movie").innerHTML = movies.map((m, i) =>
-    `<option value="${i}">${m.name}</option>`
-  ).join("");
-
-  const d = new Date();
-  d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-  $("date").min = d.toISOString().slice(0, 10);
-  $("date").value = d.toISOString().slice(0, 10);
-
-  drawSeats();
-  updateSummary();
-  showBookings();
-}
-
-function chooseMovie(index) {
-  $("movie").value = index;
-  selectedSeats = [];
-  drawSeats();
-  updateSummary();
-  location.hash = "booking";
-}
-
-function drawSeats() {
-  const unavailable = ["A3", "B4", "C2", "D5"];
-  let html = "";
-
-  for (let r = 0; r < 5; r++) {
-    for (let c = 1; c <= 6; c++) {
-      const seat = String.fromCharCode(65 + r) + c;
-      const disabled = unavailable.includes(seat);
-
-      html += `
-        <button class="seat ${selectedSeats.includes(seat) ? "selected" : ""}"
-          ${disabled ? "disabled" : ""}
-          onclick="toggleSeat('${seat}')">${seat}</button>
-      `;
+        return `${year}-${month}-${day}`;
     }
-  }
-  $("seats").innerHTML = html;
-}
 
-function toggleSeat(seat) {
-  if (selectedSeats.includes(seat)) {
-    selectedSeats = selectedSeats.filter(s => s !== seat);
-  } else {
-    selectedSeats.push(seat);
-  }
-  drawSeats();
-  updateSummary();
-}
+    bookingDate.min = getToday();
+    bookingDate.value = getToday();
 
-function updateSummary() {
-  const movie = movies[Number($("movie").value) || 0];
-  const count = selectedSeats.length;
-  const ticketCost = count * movie.price;
-  const total = ticketCost + (count ? fee : 0);
+    // Create a backup poster if the local image cannot be loaded.
+    function makeFallbackPoster(movie, img) {
+        img.onerror = null;
 
-  $("sMovie").textContent = movie.name;
-  $("sDate").textContent = $("date").value || "—";
-  $("sTime").textContent = $("time").value;
-  $("sSeats").textContent = selectedSeats.join(", ") || "None";
-  $("sPrice").textContent = money(ticketCost);
-  $("sFee").textContent = money(count ? fee : 0);
-  $("sTotal").textContent = money(total);
-}
+        const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="400" height="600" viewBox="0 0 400 600">
+            <rect width="400" height="600" fill="#21151e"/>
+            <circle cx="200" cy="210" r="95" fill="#482132"/>
+            <text x="200" y="235" text-anchor="middle"
+                  font-size="85" fill="#ff3855">▶</text>
+            <text x="200" y="370" text-anchor="middle"
+                  font-size="25" font-family="Arial"
+                  font-weight="bold" fill="white">${movie.title}</text>
+            <text x="200" y="415" text-anchor="middle"
+                  font-size="19" font-family="Arial"
+                  fill="#ff8193">${movie.genre}</text>
+            <text x="200" y="550" text-anchor="middle"
+                  font-size="22" font-family="Arial"
+                  fill="#dddddd">CINEBOOK</text>
+        </svg>`;
 
-function showBookings() {
-  const data = JSON.parse(
-    localStorage.getItem("cinebookBookings") || "[]"
-  );
+        img.src = "data:image/svg+xml;charset=UTF-8," +
+            encodeURIComponent(svg);
+    }
 
-  $("bookingList").innerHTML = data.length
-    ? data.map(b => `
-        <div class="booking">
-          <strong>${b.movie}</strong>
-          <p>${b.date} | ${b.time} | Seats: ${b.seats}</p>
-          <p>Booking ID: ${b.id} | Total: ${money(b.total)}</p>
-        </div>
-      `).join("")
-    : "<p>No bookings yet.</p>";
-}
+    // Display all four movie cards.
+    function displayMovies() {
+        movieList.innerHTML = "";
+        bookingMovie.innerHTML = "";
 
-$("movie").addEventListener("change", () => {
-  selectedSeats = [];
-  drawSeats();
-  updateSummary();
-});
-$("date").addEventListener("change", updateSummary);
-$("time").addEventListener("change", updateSummary);
+        movies.forEach(movie => {
+            const card = document.createElement("article");
+            card.className = "movie-card";
+            card.dataset.id = movie.id;
 
-$("confirm").addEventListener("click", () => {
-  const name = $("name").value.trim();
+            const img = document.createElement("img");
+            img.className = "poster";
+            img.alt = movie.title + " poster";
+            img.src = movie.poster;
 
-  if (!name) {
-    alert("Please enter your name.");
-    return;
-  }
-  if (!selectedSeats.length) {
-    alert("Please select at least one seat.");
-    return;
-  }
+            img.onerror = function () {
+                makeFallbackPoster(movie, this);
+            };
 
-  const movie = movies[Number($("movie").value) || 0];
-  const total = selectedSeats.length * movie.price + fee;
-  const booking = {
-    id: "CB" + Date.now().toString().slice(-7),
-    movie: movie.name,
-    date: $("date").value,
-    time: $("time").value,
-    seats: [...selectedSeats],
-    total: total,
-    name: name
-  };
+            const title = document.createElement("h3");
+            title.textContent = movie.title;
 
-  const data = JSON.parse(
-    localStorage.getItem("cinebookBookings") || "[]"
-  );
-  data.push(booking);
-  localStorage.setItem("cinebookBookings", JSON.stringify(data));
+            const genre = document.createElement("p");
+            genre.className = "genre";
+            genre.textContent = movie.genre;
 
-  $("message").textContent =
-    "Demo booking confirmed! ID: " + booking.id +
-    ". No payment was taken.";
+            const price = document.createElement("div");
+            price.className = "price";
+            price.textContent = `₹${movie.price} per ticket`;
 
-  selectedSeats = [];
-  drawSeats();
-  updateSummary();
-  showBookings();
-});
+            const button = document.createElement("button");
+            button.type = "button";
+            button.textContent = "Book This Movie";
 
-$("clear").addEventListener("click", () => {
-  if (confirm("Clear all saved demo bookings?")) {
-    localStorage.removeItem("cinebookBookings");
-    showBookings();
-  }
-});
+            button.addEventListener("click", () => {
+                bookingMovie.value = String(movie.id);
+                confirmation.style.display = "none";
+                updateSummary();
 
-setup();
+                document.getElementById("booking").scrollIntoView({
+                    behavior: "smooth"
+                });
+            });
+
+            card.append(img, title, genre, price, button);
+            movieList.appendChild(card);
+
+            const option = document.createElement("option");
+            option.value = String(movie.id);
+            option.textContent = movie.title;
+            bookingMovie.appendChild(option);
+        });
+
+        updateSummary();
+    }
+
+    function getSelectedMovie() {
+        return movies.find(movie =>
+            movie.id === Number(bookingMovie.value)
+        ) || movies[0];
+    }
+
+    // Calculate and display the booking price.
+    function updateSummary() {
+        const movie = getSelectedMovie();
+        const count = Number(ticketCount.value);
+        const total = movie.price * count;
+
+        document.getElementById("summaryMovie").textContent = movie.title;
+        document.getElementById("summaryPrice").textContent =
+            "₹" + movie.price;
+        document.getElementById("summaryCount").textContent = count;
+        document.getElementById("summaryDate").textContent =
+            bookingDate.value || "Not selected";
+        document.getElementById("summaryTime").textContent = showtime.value;
+        document.getElementById("summaryTotal").textContent = "₹" + total;
+
+        document.querySelectorAll(".movie-card").forEach(card => {
+            card.classList.toggle(
+                "selected",
+                Number(card.dataset.id) === movie.id
+            );
+        });
+    }
+
+    bookingMovie.addEventListener("change", () => {
+        confirmation.style.display = "none";
+        updateSummary();
+    });
+
+    ticketCount.addEventListener("change", updateSummary);
+    showtime.addEventListener("change", updateSummary);
+    bookingDate.addEventListener("change", updateSummary);
+
+    // Confirm and save a demo booking.
+    document.getElementById("bookingForm").addEventListener(
+        "submit",
+        function (event) {
+            event.preventDefault();
+
+            const name = document.getElementById("customerName")
+                .value.trim();
+
+            const movie = getSelectedMovie();
+            const date = bookingDate.value;
+            const time = showtime.value;
+            const count = Number(ticketCount.value);
+
+            if (!name) {
+                alert("Please enter your name.");
+                return;
+            }
+
+            if (!date || date < getToday()) {
+                alert("Please select today or a future date.");
+                return;
+            }
+
+            const booking = {
+                bookingId: "CB" + Date.now().toString().slice(-8),
+                name: name,
+                movie: movie.title,
+                date: date,
+                time: time,
+                tickets: count,
+                total: movie.price * count
+            };
+
+            const bookings = JSON.parse(
+                localStorage.getItem("cinebookBookings") || "[]"
+            );
+
+            bookings.push(booking);
+
+            localStorage.setItem(
+                "cinebookBookings",
+                JSON.stringify(bookings)
+            );
+
+            document.getElementById("confirmationDetails").textContent =
+                "Booking ID: " + booking.bookingId +
+                " | Name: " + booking.name +
+                " | Movie: " + booking.movie +
+                " | Date: " + booking.date +
+                " | Time: " + booking.time +
+                " | Tickets: " + booking.tickets +
+                " | Total: ₹" + booking.total;
+
+            confirmation.style.display = "block";
+            confirmation.scrollIntoView({
+                behavior: "smooth",
+                block: "nearest"
+            });
+        }
+    );
+
+    displayMovies();
 </script>
+
 </body>
 </html>
